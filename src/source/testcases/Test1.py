@@ -4,7 +4,7 @@
 
 import unittest
 from selenium import webdriver
-from src.lib.HTMLTestReportCN import DirAndFiles
+from src.lib.HTMLTestReportCN import ReportDirectory
 
 
 class TestClass(unittest.TestCase):
@@ -13,7 +13,7 @@ class TestClass(unittest.TestCase):
     def setUp(self):
         self.browser = webdriver.Chrome(executable_path="../../lib/chromedriver.exe")
         self.browser.get("https://www.baidu.com")
-        self.daf = DirAndFiles()
+        self.report_dir = ReportDirectory()
 
     def tearDown(self):
         self.browser.quit()
@@ -22,9 +22,9 @@ class TestClass(unittest.TestCase):
         """ UI自动化测试1 """
         try:
             # 正确值为 //input[@id='kw']
-            self.browser.find_element_by_xpath("//input[@id='kw1']")
+            self.browser.find_element_by_xpath("//input[@id='kw']")
         except Exception:
-            self.daf.get_screenshot(self.browser)
+            self.report_dir.get_screenshot(self.browser)
             raise
 
     def test2_assert_equal(self):
@@ -43,10 +43,10 @@ class TestClass(unittest.TestCase):
             # 加了个感叹号 ！
             self.assertEqual(title, "百度一下，你就知道!", "Title不一致！")
         except AssertionError:
-            self.daf.get_screenshot(self.browser)
+            self.report_dir.get_screenshot(self.browser)
             raise
 
 
 if __name__ == "__main__":
-    DirAndFiles().create_dir()
+    ReportDirectory().create_dir()
     unittest.main()

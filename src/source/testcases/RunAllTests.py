@@ -17,8 +17,8 @@ class RunAllTests(object):
         test_suite = unittest.TestLoader().discover(self.test_case_path)
 
         # 启动测试时创建文件夹并获取报告的名字
-        daf = HTMLTestReportCN.DirAndFiles()
-        daf.create_dir(title=self.title)
+        report_dir = HTMLTestReportCN.ReportDirectory()
+        report_dir.create_dir(title=self.title)
         report_path = HTMLTestReportCN.GlobalMsg.get_value("report_path")
 
         fp = open(report_path, "wb")

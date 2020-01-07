@@ -69,9 +69,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 __author__ = "Wai Yip Tung,  Findyou,  boafantasy,  Gelomen"
 __version__ = "1.2.0"
 
-
 """
 Change History
+Version 1.3.0 -- Gelomen
+* 增加初始化报告目录自定义
+* 升级版本
+* 优化命名
+
 Version 1.2.0 -- Gelomen
 * 优化用例说明显示
 * 错误和失败报告里可以放入多张截图
@@ -171,7 +175,6 @@ import sys
 import os
 import re
 
-
 # 全局变量      -- Gelomen
 _global_dict = {}
 
@@ -192,6 +195,7 @@ class GlobalMsg(object):
             return _global_dict[name]
         except KeyError:
             return None
+
 
 # ------------------------------------------------------------------------
 # The redirectors below are used to capture output during testing. Output
@@ -223,6 +227,7 @@ class OutputRedirector(object):
 
 stdout_redirector = OutputRedirector(sys.stdout)
 stderr_redirector = OutputRedirector(sys.stderr)
+
 
 # ----------------------------------------------------------------------
 # Template
@@ -819,6 +824,7 @@ table       { font-size: 100%; }
     </span></a></div>
     """
 
+
 # -------------------- The end of the Template class -------------------
 
 
@@ -1009,7 +1015,8 @@ class HTMLTestRunner(Template_mixin):
         if status:
             status = '，'.join(status)
             if (result.success_count + result.failure_count + result.error_count) > 0:
-                self.passrate = str("%.2f%%" % (float(result.success_count) / float(result.success_count + result.failure_count + result.error_count) * 100))
+                self.passrate = str("%.2f%%" % (float(result.success_count) / float(
+                    result.success_count + result.failure_count + result.error_count) * 100))
             else:
                 self.passrate = "0.00 %"
         else:
@@ -1254,10 +1261,10 @@ class HTMLTestRunner(Template_mixin):
 
 
 # 集成创建文件夹、保存截图、获得截图名字等方法，与HTMLTestReportCN交互从而实现嵌入截图  -- Gelomen
-class DirAndFiles(object):
+class ReportDirectory(object):
 
-    def __init__(self):
-        self.path = "../../result/"
+    def __init__(self, path="../../result/"):
+        self.path = path
         self.title = "Test Report"
 
     def create_dir(self, title=None):
@@ -1313,7 +1320,7 @@ class DirAndFiles(object):
         img_name = str(i) + ".png"
 
         browser_type = browser.capabilities["browserName"]
-        browser_version = browser.capabilities["version"]
+        browser_version = browser.capabilities["browserVersion"]
         browser_msg = browser_type + "(" + browser_version + ")"
 
         print("errorImg[" + img_name + "]errorImg, browser[" + browser_msg + "]browser")

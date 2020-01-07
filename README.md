@@ -8,47 +8,22 @@
 > * [boafantasy](https://github.com/boafantasy) 大神版本：https://github.com/boafantasy/HTMLTestRunnerCN
 
 ## 版本
-Version 1.0.0 -- Gelomen
-* 修复测试结果的筛选
-* 优化失败、错误小图标的颜色
+Version 1.3.0 -- Gelomen
+* 增加初始化报告目录自定义
+* 升级版本
+* 优化命名
+
+Version 1.2.0 -- Gelomen
 * 优化用例说明显示
-* 增加失败和错误详细信息的截图链接
-* 使用UI自动化测试时，增加错误、失败详细信息的浏览器信息
-* 顶部新增失败和错误测试用例合集
-* 新增测试结果统计饼图
-
-Version 0.8.2.1 -Findyou
-* 改为支持python3
-
-Version 0.8.2.1 -Findyou
-* 支持中文，汉化
-* 调整样式，美化（需要连入网络，使用的百度的Bootstrap.js）
-* 增加 通过分类显示、测试人员、通过率的展示
-* 优化“详细”与“收起”状态的变换
-* 增加返回顶部的锚点
-
-Version 0.8.2
-* Show output inline instead of popup window (Viorel Lupu).
-
-Version in 0.8.1
-* Validated XHTML (Wolfgang Borgert).
-* Added description of test classes and test cases.
-
-Version in 0.8.0
-* Define Template_mixin class for customization.
-* Workaround a IE 6 bug that it does not treat \<script\> block as CDATA.
-
-Version in 0.7.1
-* Back port to Python 2.3 (Frank Horowitz).
-* Fix missing scroll bars in detail log (Podi).
+* 错误和失败报告里可以放入多张截图
 
 ## 步骤
 #### 1. 初始化（若无需截图，则跳过此步骤）
-unittest框架，`setup()` 初始化 `DirAndFiles()`
+unittest框架，`setup()` 初始化 `ReportDirectory()`
 ```python
 def setUp(self):
     ...
-    self.daf = DirAndFiles()
+    self.report_dir = ReportDirectory()
 ```
 #### 2. 执行截图和获取截图名字（若无需截图，则跳过此步骤）
 测试用例的断言操作，在抛出的Exception里执行截图操作，截图名字通过 `print()` 出来跟随异常一起抛出，**注意：截图方法用的是selenium的，如需用其他方法截图，请自行到 `HTMLTestReportCN.py` 修改 `get_screenshot()` 方法**，调用该方法则自动把截图附加到报告里。
@@ -57,18 +32,18 @@ def test1_find_input(self):
     try:
         self.browser.find_element_by_xpath("//input[@id='kw']")
     except Exception:
-        self.daf.get_screenshot(self.browser)
+        self.report_dir.get_screenshot(self.browser)
         raise
 ```
 #### 3. 启动时创建文件夹
 启动代码里，调用 `create_dir()`，会根据时间创建文件夹，把截图和报告存入对应的文件夹
 ```python
 if __name__ == "__main__":
-    DirAndFiles().create_dir()
+    ReportDirectory().create_dir()
     unittest.main()
 ```
 #### 4. 报告路径
-到 **HTMLTestReportCN.py**，找到 `class DirAndFiles(object)`，修改初始化的 `self.path = "../../result/"` 报告路径为你自己的，**注意：目录结构需要先创建好！且最好是以测试用例为相对路径，而不是用绝对路径**
+到 **HTMLTestReportCN.py**，找到 `class ReportDirectory(object)`，修改初始化的 `self.path = "../../result/"` 报告路径为你自己的，**注意：目录结构需要先创建好！且最好是以测试用例为相对路径，而不是用绝对路径**
 
 #### 5. 截图基本功能
 目前为止，在测试用例文件启动后，出现异常可以实现截图功能
@@ -87,7 +62,7 @@ class RunAllTests(object):
         test_suite = unittest.TestLoader().discover(self.test_case_path)
 
         # 启动测试时创建文件夹并获取报告的名字
-        daf = HTMLTestReportCN.DirAndFiles()
+        daf = HTMLTestReportCN.ReportDirectory()
         daf.create_dir(title=self.title)
         report_path = HTMLTestReportCN.GlobalMsg.get_value("report_path")
 
