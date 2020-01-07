@@ -42,8 +42,16 @@ if __name__ == "__main__":
     ReportDirectory().create_dir()
     unittest.main()
 ```
-#### 4. 报告路径
-到 **HTMLTestReportCN.py**，找到 `class ReportDirectory(object)`，修改初始化的 `self.path = "../../result/"` 报告路径为你自己的，**注意：目录结构需要先创建好！且最好是以测试用例为相对路径，而不是用绝对路径**
+#### 4. 自定义报告路径
+初始化 `ReportDirectory()` 时可以传入 `path=“自定义路径”` 来自定义报告生成目录
+
+```python
+def setUp(self):
+    ...
+    self.report_dir = ReportDirectory(path="./report/")
+```
+
+**注意：目录结构需要先创建好！且最好是相对路径，而不是用绝对路径**
 
 #### 5. 截图基本功能
 目前为止，在测试用例文件启动后，出现异常可以实现截图功能
@@ -62,8 +70,8 @@ class RunAllTests(object):
         test_suite = unittest.TestLoader().discover(self.test_case_path)
 
         # 启动测试时创建文件夹并获取报告的名字
-        daf = HTMLTestReportCN.ReportDirectory()
-        daf.create_dir(title=self.title)
+        report_dir = HTMLTestReportCN.ReportDirectory()
+        report_dir.create_dir(title=self.title)
         report_path = HTMLTestReportCN.GlobalMsg.get_value("report_path")
 
         fp = open(report_path, "wb")
